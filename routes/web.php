@@ -36,7 +36,7 @@ Route::middleware([
 Route::get('/',[HomeController::class, 'index']);
 
 // For redirect to home or admin =====>
-Route::get('/redirect',[HomeController::class, 'redirect']);
+Route::get('/redirect',[HomeController::class, 'redirect'])->middleware('auth','verified');
 
 //Add products as admin =====>
 Route::get('/mens_pro_add_view',[AdminController::class, 'mens_pro_add_view']);
@@ -76,6 +76,59 @@ Route::post('/add_cart_kids/{id}',[HomeController::class, 'add_cart_kids']);
 Route::get('/cart_view',[HomeController::class, 'cart_view']);
 //Remove Product from cart ====>
 Route::get('/delete_cart_data/{id}',[HomeController::class, 'delete_cart_data']);
+
+
+//for stripe paymentgetway =====>
+Route::get('/stripe/{totalprice}',[HomeController::class, 'stripe']);
+Route::post('stripe/{totalprice}',[HomeController::class,'stripePost'])->name('stripe.post');
+
+
+// For cash order ====>
+Route::get('/cash_order',[HomeController::class, 'cash_order']);
+
+//show order as admin ====>
+Route::get('/show_order',[AdminController::class, 'show_order']);
+
+// For delivered as admin ====>
+Route::get('/delivered/{id}',[AdminController::class, 'delivered']);
+
+//for search ====>
+Route::get('/search',[AdminController::class, 'search']);
+
+//for download pdf of order ====>
+Route::get('/for_pdf/{id}',[AdminController::class, 'for_pdf']);
+
+//for all product view ====>
+Route::get('/all_pro',[HomeController::class, 'all_pro']);
+
+//for all mens product view ====>
+Route::get('/mens_all',[HomeController::class, 'mens_all']);
+
+//for all mens product view ====>
+Route::get('/womens_all',[HomeController::class, 'womens_all']);
+
+//for all kids product view ====>
+Route::get('/kids_all',[HomeController::class, 'kids_all']);
+
+//for sending email ====>
+Route::get('/send_mail/{id}',[AdminController::class, 'send_mail']);
+Route::post('/send_user_email/{id}',[AdminController::class, 'send_user_email']);
+
+//for view orders as user ====>
+Route::get('/view_orders',[HomeController::class, 'view_orders']);
+
+//for cancle order ====>
+Route::get('/cancle_order/{id}',[HomeController::class, 'cancle_order']);
+
+
+
+
+
+
+
+
+
+
 
 
 

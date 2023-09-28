@@ -78,41 +78,46 @@ https://templatemo.com/tm-571-hexashop
                 <th class="th_deg">Product title</th>
                 <th class="th_deg">Product Quantity</th>
                 <th class="th_deg">Price</th>
+                <th class="th_deg">Payment Status</th>
+                <th class="th_deg">Delivery Status</th>
                 <th class="th_deg">Image</th>
-                <th class="th_deg">Action</th>
+                <th class="th_deg">Cancel Order</th>
             </tr>
 
-            <?php $totalprice= 0;?>
-            @foreach($cart_data as $cart_data)
+            @foreach($order as $order)
+
+            
             <tr>
-                <td>{{$cart_data->product_ttitle}}</td>
-                <td>{{$cart_data->quantity}}</td>
-                <td>{{$cart_data->price}}</td>
-                <td><img width="150" height="150" src="product/{{$cart_data->image}}" alt=""></td>
-                <td><a href="{{url('delete_cart_data',$cart_data->id)}}" class="btn btn-danger" submit>Remove</a></td>
+                <td>{{$order->product_ttitle}}</td>
+                <td>{{$order->quantity}}</td>
+                <td>{{$order->price}}</td>
+                <td>{{$order->payment_status}}</td>
+                <td>{{$order->delivery_status}}</td>
+
+                <td><img width="150" height="150" src="product/{{$order->image}}" alt=""></td>
+                <td>
+
+                @if($order->delivery_status == 'processing')
+                    <a href="{{url('cancle_order',$order->id)}}" class="btn btn-danger" submit>Cancle Order</a>
+
+                    @else
+
+                        <p>not allowed</p>
+
+
+                </td>
+                @endif
 
 
             </tr>
-
-            <?php $totalprice = $totalprice + $cart_data->price?>
-
             @endforeach
+
+            
 
 
         </table>
-        <div class="">
-            <h1 class="total_deg">
 
-           Total Price :  ${{$totalprice}}
-
-            </h1>
-        </div>
-        <div>
-            <h1 style="font-size: 25px; padding-bottom:15px;">Proceed Order</h1>
-            <a href="{{url('cash_order')}}" class="btn btn-danger">Cash On Delivery</a>
-            <a href="{{url('stripe',$totalprice)}}" class="btn btn-danger">Pay Using Card</a>
-
-        </div>
+        
       </div>
 
 

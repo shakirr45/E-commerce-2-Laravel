@@ -12,6 +12,15 @@ use App\Models\MensItems;
 use App\Models\WomensItems;
 use App\Models\KidsItems;
 
+use App\Models\Order;
+
+use PDF;
+
+//for email=====>
+use Notification;
+use App\Notifications\MyFirstNotification;
+
+
 class AdminController extends Controller
 {
     //Mens Product add =====>
@@ -130,6 +139,68 @@ class AdminController extends Controller
             return redirect()->back();  
     
         }
+
+        //for show order ====>
+        public function show_order(){
+            $order_data = Order::all();
+            return view('admin.show_order',compact('order_data'));
+        }
+
+        // for delivered as admin ====>
+        public function delivered($id){
+            $order = Order::find($id);
+            $order->delivery_status ='delivered';
+            $order->payment_status ='paid';
+    
+            $order->save();
+            return redirect()->back();
+        }
+
+        //search in order table ====>
+        public function search(Request $request){
+            $search =$request->search; 
+            $order_data = Order::where('name' , 'like', '%' .$search.'%')->orWhere('phone' , 'like' , '%'.$search. '%' )->get();
+            return view('admin.show_order',compact('order_data'));
+        }
+
+        //for pdf download ====>
+        public function for_pdf($id){
+            $order = Order::find($id);
+            $pdf = PDF::loadView('admin.pdf',compact('order'));
+            return $pdf->download('order_details.pdf');
+
+        }
+
+        //for send mail ====>
+        public function send_mail($id){
+            $order = Order::find($id);
+            return view('admin.send_mail',compact('order'));
+        }
+
+
+
+   
+
+    //send email =====>
+    public function send_user_email(Request $request , $id){
+        $order = Order::find($id);
+        //its come from app notifications----->$details
+        $details = [
+            'greeting' =>$request->greeting,
+            'firstline' =>$request->firstline,
+            'body' =>$request->body,
+            'button' =>$request->button,
+            'url' =>$request->url,
+            'lastline' =>$request->lastline,
+
+        ];
+        Notification::send($order, new MyFirstNotification($details));
+        return redirect()->back();  
+
+    }
+
+
+    
 
 
 }
